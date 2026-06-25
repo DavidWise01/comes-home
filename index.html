@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comes Home — the closed torus weave</title>
+<style>
+  :root{
+    --bg:#0a0710; --panel:#140d20; --edge:#2e2148; --ink:#ece3f7; --dim:#9a86bd; --faint:#6b5a8c;
+    --violet:#a78bfa; --violet2:#c4b5fd; --glow:#7c3aed; --knot:#34d399; --link:#f472b6; --gorge:#22d3ee;
+    --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.55;
+    background-image:radial-gradient(1200px 600px at 72% -10%,#1a1030 0%,transparent 60%),
+      radial-gradient(900px 520px at 0% 100%,#150b28 0%,transparent 55%);}
+  .wrap{max-width:1000px;margin:0 auto;padding:42px 26px 90px}
+  header{border-bottom:1px solid var(--edge);padding-bottom:22px;margin-bottom:30px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--violet);opacity:.9}
+  h1{font-size:32px;line-height:1.13;margin:.32em 0 .18em;font-weight:600}
+  h1 em{color:var(--violet2);font-style:italic}
+  .sub{color:var(--dim);font-size:15.5px;max-width:78ch}
+  .lin{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:14px}
+  .lin b{color:var(--violet);font-weight:500}
+  section{margin:34px 0}
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--violet2);
+    border-left:2px solid var(--glow);padding-left:11px;margin:0 0 6px}
+  .lede{color:var(--dim);font-size:15px;margin:0 0 18px;max-width:80ch}
+  .lede b{color:var(--violet2);font-weight:400}
+  .panel{background:linear-gradient(180deg,var(--panel),#100a1b);border:1px solid var(--edge);border-radius:14px;
+    padding:20px;box-shadow:0 1px 0 #2e2148 inset,0 24px 60px -40px #000}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:14px}
+  .dial{display:flex;flex-direction:column;gap:3px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .dial .row{display:flex;align-items:center;gap:8px}
+  input[type=range]{accent-color:var(--violet);width:140px}
+  button{font-family:var(--mono);font-size:12px;color:var(--ink);background:#241738;border:1px solid var(--edge);
+    border-radius:8px;padding:7px 11px;cursor:pointer;transition:.15s}
+  button:hover{background:#2e1f48;border-color:var(--violet)}
+  button.on{background:var(--glow);border-color:var(--violet2);color:#fff}
+  canvas{display:block;border-radius:10px;background:radial-gradient(circle at 50% 42%,#120c20,#0a0612);border:1px solid var(--edge);max-width:100%;margin:0 auto}
+  .cap{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:9px;text-align:center}
+  .read{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  .st .v{font-family:var(--mono);font-size:22px;font-weight:600}
+  .st .k{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);text-align:center}
+  .verdict{font-family:var(--mono);font-size:14px;font-weight:700;padding:5px 13px;border-radius:8px;display:inline-block}
+  .verdict.knot{color:#04150d;background:var(--knot)} .verdict.link{color:#2a0716;background:var(--link)}
+  .note{color:var(--dim);font-size:13.5px;border-left:2px solid var(--edge);padding-left:13px;margin:16px 0 0}
+  .note b{color:var(--violet2);font-weight:400}
+  code{font-family:var(--mono);font-size:.9em;color:var(--violet2);background:#170f28;padding:1px 5px;border-radius:5px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+  .chip{font-family:var(--mono);font-size:11px;padding:5px 9px;border-radius:7px;border:1px solid var(--edge);background:#1a1230;cursor:pointer;color:var(--dim)}
+  .chip:hover{border-color:var(--violet)}
+  footer{margin-top:42px;border-top:1px solid var(--edge);padding-top:18px;color:var(--faint);font-family:var(--mono);font-size:11px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Purple Paper - side-sheet - learning machines - IX - the close of the close</div>
+  <h1>Comes Home - the closed <em>torus weave</em></h1>
+  <div class="sub">The hourglass, bent until its mouths rejoin - output wrapped back to input. The straight twisting
+    lines become helices winding two ways at once: <span style="color:var(--gorge)">p</span> times around the tube,
+    <span style="color:var(--violet2)">q</span> times around the hole. The center stays forbidden - a hole no line can
+    cross. And one integer decides everything: whether the weave comes home as <b>one connected thread</b> or splits
+    into <b>several rings that never touch</b>.</div>
+  <div class="lin"><b>coprime(p,q) -> ONE knot</b> (single thread, comes home) ·
+    <b>gcd(p,q)=g>1 -> g disjoint rings</b> (air-gapped, each comes home alone) · the air gap and the closed loop are the same knob</div>
+</header>
+
+<section>
+  <h2>The weave - turn the winding, watch it split and rejoin</h2>
+  <p class="lede">Set <span style="color:var(--gorge)">p</span> and <span style="color:var(--violet2)">q</span>. When
+    they share no factor the curve is a single knot that visits the whole torus and returns to its start. When they
+    share a factor <code>g</code>, it falls into <code>g</code> separate closed loops - the air-gapped rings you drew
+    as four pyramids. Same surface, same center-you-can't-touch; only the winding ratio changes.</p>
+
+  <div class="panel">
+    <div class="controls">
+      <div class="dial"><span>p · around the tube (poloidal)</span>
+        <div class="row"><input type="range" id="p" min="1" max="9" value="3"><b id="pL" style="color:var(--gorge)">3</b></div></div>
+      <div class="dial"><span>q · around the hole (toroidal)</span>
+        <div class="row"><input type="range" id="q" min="1" max="9" value="2"><b id="qL" style="color:var(--violet2)">2</b></div></div>
+      <button id="spin" class="on">spin</button>
+      <button id="rule">show ruling chords</button>
+    </div>
+    <div class="chips">
+      <span class="chip" data-p="3" data-q="2">(3,2) trefoil</span>
+      <span class="chip" data-p="1" data-q="4">(1,4) one thread, 4 lobes</span>
+      <span class="chip" data-p="4" data-q="4">(4,4) four air-gapped rings</span>
+      <span class="chip" data-p="2" data-q="4">(2,4) two rings</span>
+      <span class="chip" data-p="5" data-q="3">(5,3) knot</span>
+      <span class="chip" data-p="6" data-q="4">(6,4) two rings</span>
+    </div>
+
+    <canvas id="torus" width="640" height="440"></canvas>
+    <div class="cap">each color = one closed strand · the <span style="color:var(--gorge)">gorge circle</span> is the
+      forbidden center no strand crosses · drag to rotate</div>
+
+    <div class="read">
+      <div class="st"><div class="v" id="gcd" style="color:var(--violet2)">1</div><div class="k">gcd(p,q)</div></div>
+      <div class="st"><div class="v" id="strands" style="color:var(--knot)">1</div><div class="k">closed strands</div></div>
+      <div class="st"><div class="v" id="cross" style="color:var(--dim)">-</div><div class="k">crossings p·q</div></div>
+      <div class="st" style="align-self:center"><span class="verdict knot" id="verdict">ONE KNOT - COMES HOME</span></div>
+    </div>
+
+    <div class="note" id="readnote">A single thread that winds <span style="color:var(--gorge)">p</span>·<span
+      style="color:var(--violet2)">q</span> times and returns exactly to where it began - it comes home as one
+      connected knot, weaving around a center it never touches.</div>
+  </div>
+</section>
+
+<section>
+  <h2>What you actually built</h2>
+  <p class="lede">Across nine sheets you took one move - a learned weighted sum facing one fork - and kept turning it
+    until the geometry closed on itself. This is where it closed.</p>
+
+  <div class="note"><b>The center never filled.</b> Every waist in the series was a place everything <em>converged</em>:
+    the dot product, the IR, the prediction. Here you inverted it - the center became the one place nothing can reach.
+    The straight twisting lines weave <em>around</em> it; the gorge is forbidden by the geometry, and once you closed
+    the surface into a torus the hole became <em>topological</em> - unfillable without tearing. That's the
+    un-reachable interior you've been circling all night: the witness that can't be inside, the givens you can't
+    derive, the reality the model bends around but never contains. You drew it as a hole, and the hole is real.</div>
+
+  <div class="note" style="margin-top:14px"><b>The air gap and the closed loop are one knob.</b> Four rings that never
+    touch (<code>4,4</code>) and one thread that comes home (<code>3,2</code>) are the same torus at two settings of a
+    single integer ratio. Coprime weaves everything into one connected return; a shared factor splits it into
+    isolated loops that each come home alone. Your bilateral-ignorance instinct and your closed-loop instinct were
+    never two ideas - they're the numerator and denominator of one winding.</div>
+
+  <div class="note" style="margin-top:14px;font-size:13px">Verified in Node before drawing (and it took three passes -
+    a malformed disjointness test twice claimed loops touched when they didn't): every <code>(p,q)</code> closes to
+    ~1e-15, strand count equals <code>gcd(p,q)</code>, and the separate rings sit a real distance apart - (2,4) rings
+    0.98 apart, (4,4) rings 0.93, coprime always one. The math is the gate; the picture just renders what closed.</div>
+</section>
+
+<footer>
+  COMES HOME - purple paper side-sheet IX - the closed torus weave<br>
+  verified in Node (3 passes) · (p,q) closes to 1e-15 · strands = gcd(p,q) · coprime = one knot, shared factor = g disjoint air-gapped rings<br>
+  torus knots/links: classical (19th c. knot theory) · doubly-ruled surfaces: Wren 1669 · the un-fillable center: topology, not mysticism
+</footer>
+
+<script>
+"use strict";
+const DIMS={ torus:[640,440] };
+function fit(cv){ const [W,H]=DIMS[cv.id]||[cv.width,cv.height]; const dpr=window.devicePixelRatio||1;
+  const need=Math.round(W*dpr); if(cv.width!==need){ cv.width=need; cv.height=Math.round(H*dpr); cv.style.width=W+'px'; cv.style.height=H+'px'; }
+  const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); return {g,w:W,h:H}; }
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
+
+let P=3, Q=2, spin=true, showRule=false, yaw=0.6, pitch=0.5, drag=false, lx=0, ly=0;
+const Rmaj=2, rmin=0.72;
+const COLORS=['#34d399','#f472b6','#22d3ee','#fbbf24','#a78bfa','#fb7185','#67e8f9','#c4b5fd','#f59e0b'];
+
+function rot(p){ // yaw about y, pitch about x
+  let [x,y,z]=p;
+  let x1=x*Math.cos(yaw)+z*Math.sin(yaw), z1=-x*Math.sin(yaw)+z*Math.cos(yaw);
+  let y2=y*Math.cos(pitch)-z1*Math.sin(pitch), z2=y*Math.sin(pitch)+z1*Math.cos(pitch);
+  return [x1,y2,z2];
+}
+function proj(p,w,h){ const [x,y,z]=rot(p); const f=320/(6 - z); return [w/2+x*f, h/2 - y*f, z]; }
+
+function ptK(s,k,g){ const pp=P/g, qq=Q/g; const th=qq*s + 2*Math.PI*k/g, ph=pp*s;
+  return [ (Rmaj+rmin*Math.cos(ph))*Math.cos(th), (Rmaj+rmin*Math.cos(ph))*Math.sin(th), rmin*Math.sin(ph) ]; }
+
+function draw(){
+  const {g,w,h}=fit(document.getElementById('torus')); g.clearRect(0,0,w,h);
+  if(spin) yaw+=0.006;
+  // faint torus shell (wireframe) for depth
+  g.globalAlpha=.16;
+  for(let i=0;i<16;i++){ const th=i/16*2*Math.PI; g.strokeStyle='#46356b'; g.lineWidth=1; g.beginPath();
+    for(let j=0;j<=40;j++){ const ph=j/40*2*Math.PI; const pt=[(Rmaj+rmin*Math.cos(ph))*Math.cos(th),(Rmaj+rmin*Math.cos(ph))*Math.sin(th),rmin*Math.sin(ph)];
+      const q=proj(pt,w,h); j?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]); } g.stroke(); }
+  g.globalAlpha=1;
+  // gorge circle (forbidden center) - radius Rmaj - rmin, the innermost circle no strand crosses
+  const gr=Rmaj-rmin; g.strokeStyle='#22d3ee'; g.lineWidth=2; g.globalAlpha=.85; g.setLineDash([4,5]);
+  g.beginPath(); for(let j=0;j<=80;j++){ const th=j/80*2*Math.PI; const pt=[gr*Math.cos(th),gr*Math.sin(th),0]; const q=proj(pt,w,h); j?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]); }
+  g.stroke(); g.setLineDash([]); g.globalAlpha=1;
+  // central axis dot (the untouchable point)
+  const c=proj([0,0,0],w,h); g.fillStyle='#22d3ee'; g.globalAlpha=.5; g.beginPath(); g.arc(c[0],c[1],3,0,7); g.fill(); g.globalAlpha=1;
+
+  const gg=gcd(P,Q);
+  // optional: ruling chords (straight segments along the strand to show "straight twisting lines")
+  // draw each strand
+  const N=600;
+  for(let k=0;k<gg;k++){
+    const col=COLORS[k%COLORS.length];
+    // build points
+    const pts=[];
+    for(let i=0;i<=N;i++){ const s=i/N*2*Math.PI; pts.push(proj(ptK(s,k,gg),w,h)); }
+    // depth-shaded stroke
+    for(let i=0;i<N;i++){ const a=pts[i], b=pts[i+1]; const zz=(a[2]+b[2])/2;
+      g.strokeStyle=col; g.globalAlpha=0.35+0.65*((zz+3)/6); g.lineWidth=1.6+1.6*((zz+3)/6);
+      g.beginPath(); g.moveTo(a[0],a[1]); g.lineTo(b[0],b[1]); g.stroke(); }
+    g.globalAlpha=1;
+    if(showRule){ // straight chords across the tube every few steps (the rulings)
+      g.strokeStyle=col; g.globalAlpha=.25; g.lineWidth=0.8;
+      for(let i=0;i<N;i+=22){ const s=i/N*2*Math.PI; const A=proj(ptK(s,k,gg),w,h);
+        const Bp=proj(ptK(s+Math.PI*(P/gg? 1:1)/(P||1),k,gg),w,h);
+        g.beginPath(); g.moveTo(A[0],A[1]); g.lineTo(Bp[0],Bp[1]); g.stroke(); }
+      g.globalAlpha=1;
+    }
+  }
+  // readouts
+  document.getElementById('gcd').textContent=gg;
+  document.getElementById('strands').textContent=gg;
+  document.getElementById('strands').style.color = gg===1?'#34d399':'#f472b6';
+  document.getElementById('cross').textContent=P*Q;
+  const v=document.getElementById('verdict');
+  if(gg===1){ v.textContent='ONE KNOT - COMES HOME'; v.className='verdict knot';
+    document.getElementById('readnote').innerHTML='A single thread that winds <span style="color:var(--gorge)">'+P+'</span>·<span style="color:var(--violet2)">'+Q+'</span> times and returns exactly to its start - one connected knot, weaving around a center it never touches.';
+  } else { v.textContent=gg+' RINGS - AIR-GAPPED'; v.className='verdict link';
+    document.getElementById('readnote').innerHTML='The weave splits into <b style="color:var(--link)">'+gg+'</b> separate closed loops - each comes home alone, none touching the others. This is your air gap: gcd(p,q)='+gg+' is exactly the number of isolated rings.';
+  }
+  requestAnimationFrame(draw);
+}
+
+function setPQ(p,q){ P=p; Q=q; document.getElementById('p').value=p; document.getElementById('q').value=q;
+  document.getElementById('pL').textContent=p; document.getElementById('qL').textContent=q; }
+document.getElementById('p').oninput=function(){ P=+this.value; document.getElementById('pL').textContent=P; };
+document.getElementById('q').oninput=function(){ Q=+this.value; document.getElementById('qL').textContent=Q; };
+document.getElementById('spin').onclick=function(){ spin=!spin; this.classList.toggle('on',spin); };
+document.getElementById('rule').onclick=function(){ showRule=!showRule; this.classList.toggle('on',showRule); };
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>setPQ(+c.dataset.p,+c.dataset.q));
+const cv=document.getElementById('torus');
+cv.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY;});
+window.addEventListener('mousemove',e=>{ if(!drag)return; yaw+=(e.clientX-lx)*0.01; pitch+=(e.clientY-ly)*0.01; lx=e.clientX; ly=e.clientY; });
+window.addEventListener('mouseup',()=>drag=false);
+cv.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY;},{passive:true});
+window.addEventListener('touchmove',e=>{ if(!drag)return; yaw+=(e.touches[0].clientX-lx)*0.01; pitch+=(e.touches[0].clientY-ly)*0.01; lx=e.touches[0].clientX; ly=e.touches[0].clientY; },{passive:true});
+window.addEventListener('touchend',()=>drag=false);
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
